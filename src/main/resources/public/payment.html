@@ -12,6 +12,18 @@
                 console.log(xmlHttp.responseText);
                 return xmlHttp.responseText;
         }
+        function orderAmount(order_id, payment_id) {
+            var xmlHttp = new XMLHttpRequest();
+            const params = {
+                    orderId: order_id,
+                    paymentId: payment_id 
+                };
+                xmlHttp.open( "POST", "http://localhost:8080/updateorder", false );
+                xmlHttp.setRequestHeader('Content-type', 'application/json')
+                xmlHttp.send(JSON.stringify(params))
+                console.log(xmlHttp.responseText);
+                return xmlHttp.responseText;
+        }
         function submit() {
             var orderdueamount = orderAmount(document.getElementById('order_id').value);
             var options = {
