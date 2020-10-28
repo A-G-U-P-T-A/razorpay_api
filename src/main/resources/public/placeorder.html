@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Place Order</title>
+        <script>
+            function orderCreate() {
+                var xmlHttp = new XMLHttpRequest();
+                var currency = "INR";
+                const params = {
+                        amount: document.getElementById('amount').value,
+                        currency: currency
+                    };
+                    xmlHttp.open( "POST", "http://localhost:8080/createorder", false );
+                    xmlHttp.setRequestHeader('Content-type', 'application/json');
+                    xmlHttp.send(JSON.stringify(params));
+                    console.log(xmlHttp.responseText);
+                    alert(xmlHttp.responseText);
+            }
+        </script>
+    </head>
+    <body>
+        <input type="text" id="amount" placeholder="amount" />
+        <br/>
+        <button onclick=orderCreate()>Pay</button>
+    </body>
+</html>
