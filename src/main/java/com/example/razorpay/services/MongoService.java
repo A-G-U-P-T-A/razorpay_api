@@ -15,7 +15,7 @@ public class MongoService {
                 "mongodb+srv://newuser:newuser@cluster0.7l3am.mongodb.net/razorpay?retryWrites=true&w=majority");
     }
 
-    public void CreateEntry(String collectionName, Document entry) {
+    public void createEntry(String collectionName, Document entry) {
         mongoClient.getDatabase("razorpay").getCollection(collectionName).insertOne(entry);
     }
 }

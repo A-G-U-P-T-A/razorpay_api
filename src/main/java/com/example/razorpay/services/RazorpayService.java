@@ -2,6 +2,7 @@ package com.example.razorpay.services;
 
 import com.example.razorpay.configs.RazorpayConstants;
 import com.example.razorpay.objects.CreateOrder;
+import com.mongodb.MongoException;
 import com.razorpay.Order;
 import com.razorpay.RazorpayClient;
 import com.razorpay.RazorpayException;
@@ -37,16 +38,22 @@ public class RazorpayService {
         options.put("currency", createOrder.getCurrency());
         try {
             Order order = razorpayClient.Orders.create(options);
-            Document document = new Document();
-            document.append("orderId", order.get("id"));
-            mongoService.CreateEntry("orders", document);
+            mongoService.createEntry("orders", createOrderDocument(order));
             return ResponseEntity.status(HttpStatus.OK).body(order.toString());
-        } catch (RazorpayException e) {
+        } catch (RazorpayException | MongoException e) {
             e.printStackTrace();
-            return e.getCause();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return e.getCause();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getCause());
         }
+    }
+
+    private Document createOrderDocument(Order order) {
+        Document document = new Document();
+        document.append("orderId", order.get("id"));
+        document.append("amount", order.get("id"));
+        document.append("createdAt", order.get("created_at"));
+        document.append("amountPaid", order.get("amount_paid"));
+        document.append("status", order.get("status"));
+        document.append("amountDue", order.get("amount_due"));
+        return document;
     }
 }
