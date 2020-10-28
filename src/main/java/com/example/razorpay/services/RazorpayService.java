@@ -5,6 +5,7 @@ import com.example.razorpay.objects.CreateOrder;
 import com.razorpay.Order;
 import com.razorpay.RazorpayClient;
 import com.razorpay.RazorpayException;
+import org.bson.Document;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,8 +37,14 @@ public class RazorpayService {
         options.put("currency", createOrder.getCurrency());
         try {
             Order order = razorpayClient.Orders.create(options);
+            Document document = new Document();
+            document.append("orderId", order.get("id"));
+            mongoService.CreateEntry("orders", document);
             return ResponseEntity.status(HttpStatus.OK).body(order.toString());
         } catch (RazorpayException e) {
+            e.printStackTrace();
+            return e.getCause();
+        } catch (Exception e) {
             e.printStackTrace();
             return e.getCause();
         }
