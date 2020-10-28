@@ -90,7 +90,7 @@ public class RazorpayService {
     private Document createOrderDocument(Order order) {
         Document document = new Document();
         document.append("orderId", order.get("id"));
-        document.append("amount", order.get("id"));
+        document.append("amount", order.get("amount"));
         document.append("createdAt", order.get("created_at"));
         document.append("amountPaid", order.get("amount_paid"));
         document.append("status", order.get("status"));
