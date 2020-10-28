@@ -1,0 +1,18 @@
+<html>
+    <head>
+    </head>
+    <body>
+        <h1>List of Orders</h1>
+        <script>
+            function httpGetData()
+            {
+                var xmlHttp = new XMLHttpRequest();
+                xmlHttp.open( "GET", "http://127.0.0.1:8080/listorders", true );
+                xmlHttp.send( null );
+                console.log(xmlHttp.responseText);
+                return xmlHttp.responseText;
+            }
+            document.write(httpGetData());
+        </script>
+    </body>
+</html>

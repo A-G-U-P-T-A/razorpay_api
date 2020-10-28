@@ -13,6 +13,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class RazorpayService {
 
@@ -41,6 +44,20 @@ public class RazorpayService {
             mongoService.createEntry("orders", createOrderDocument(order));
             return ResponseEntity.status(HttpStatus.OK).body(order.toString());
         } catch (RazorpayException | MongoException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getCause());
+        }
+    }
+
+    public Object listAllOrders() {
+        try {
+            List<Order>orders = razorpayClient.Orders.fetchAll();
+            List<String>orderIds = new ArrayList<>();
+            for (Order order:orders) {
+                orderIds.add(order.get("id"));
+            }
+            return ResponseEntity.status(HttpStatus.OK).body(orderIds);
+        } catch (RazorpayException e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getCause());
         }
