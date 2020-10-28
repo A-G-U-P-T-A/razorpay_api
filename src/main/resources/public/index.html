@@ -9,11 +9,10 @@
                 var xmlHttp = new XMLHttpRequest();
                 xmlHttp.open( "GET", "http://localhost:8080/listorders", false );
                 xmlHttp.send( null );
-                console.log(xmlHttp.responseText);
                 return xmlHttp.responseText;
             }
             var orderIdList = httpGetData();
-            document.write();
+            document.write(orderIdList);
         </script>
     </body>
 </html>
