@@ -12,12 +12,13 @@
                 console.log(xmlHttp.responseText);
                 return xmlHttp.responseText;
         }
-        function orderAmount(order_id, payment_id) {
+        function orderUpdate(order_id, payment_id) {
             var xmlHttp = new XMLHttpRequest();
             const params = {
                     orderId: order_id,
                     paymentId: payment_id 
                 };
+                console.log(params);
                 xmlHttp.open( "POST", "http://localhost:8080/updateorder", false );
                 xmlHttp.setRequestHeader('Content-type', 'application/json')
                 xmlHttp.send(JSON.stringify(params))
@@ -40,9 +41,7 @@
                 "contact": document.getElementById('mobile').value
             },
             "handler": function (response){
-                console.log(response.razorpay_payment_id);
-                alert(response.razorpay_payment_id);
-                alert(response.razorpay_order_id);
+                orderUpdate(response.razorpay_order_id,response.razorpay_payment_id);
             },
             "theme": {
                 "color": "#F37254"
