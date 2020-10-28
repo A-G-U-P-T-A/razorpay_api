@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Payment Page</title>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+        function orderAmount(order_id) {
+            var xmlHttp = new XMLHttpRequest();
+                xmlHttp.open( "GET", "http://localhost:8080/getorderamountdue?id="+order_id, false );
+                xmlHttp.send( null );
+                console.log(xmlHttp.responseText);
+                return xmlHttp.responseText;
+        }
+        function submit() {
+            var orderdueamount = orderAmount(document.getElementById('order_id').value);
+            var options = {
+            "key": "rzp_test_XkkNPtMSzKo2Pr",
+            "amount": orderdueamount,
+            "currency": "INR",
+            "name": "Acme Corp",
+            "description": "Test Transaction",
+            "order_id": document.getElementById('order_id').value,
+            "callback_url": "http://localhost:8080/success.html",
+            "prefill": {
+                "name": document.getElementById('name').value,
+                "email": document.getElementById('email').value,
+                "contact": document.getElementById('mobile').value
+            },
+            "handler": function (response){
+                console.log(response.razorpay_payment_id);
+                alert(response.razorpay_payment_id);
+                alert(response.razorpay_order_id);
+            },
+            "theme": {
+                "color": "#F37254"
+            }
+        };
+            var rzp1 = new Razorpay(options);
+            rzp1.on('payment.failed', function (response){
+                alert(response.error.code);
+                alert(response.error.description);
+                alert(response.error.source);
+                alert(response.error.step);
+                alert(response.error.reason);
+                alert(response.error.metadata);
+            });
+            
+            //console.log(document.getElementById('order_id').value);
+            rzp1.open();
+        }
+    </script>
+</head>
+<body>
+    <input type="text" id="order_id" placeholder="order_id"/>
+    <br/>
+    <input type="text" id="name" placeholder="name" />
+    <br/>
+    <input type="text" id="email" placeholder="email" />
+    <br/>
+    <input type="text" id="mobile" placeholder="mobile" />
+    <br/>
+    <button id="rzp-button1" onclick=submit()>Pay</button>
+</body>
+</html>

@@ -15,7 +15,10 @@
             var ordersIdList = orders.substring(1,orders.length-1).split(",");
             for(i=0;i<ordersIdList.length;i++) {
                 ordersIdList[i] = ordersIdList[i].substring(1,ordersIdList[i].length-1);
-                document.write("<a href='/test'>" + ordersIdList[i] + "</a><br />");
+                document.write(
+                    //"<button onclick=onSubmit(this.attributes['id'].value) type='button' value='pay amount for' id='"+ordersIdList[i]+"'>"+ordersIdList[i]+"</button><br />"
+                    ordersIdList[i]+"<br/><br/>"
+                );
             }
         </script>
     </body>

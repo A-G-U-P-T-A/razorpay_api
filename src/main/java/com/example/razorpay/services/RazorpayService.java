@@ -2,6 +2,7 @@ package com.example.razorpay.services;
 
 import com.example.razorpay.configs.RazorpayConstants;
 import com.example.razorpay.objects.CreateOrder;
+import com.example.razorpay.objects.UpdateOrder;
 import com.mongodb.MongoException;
 import com.razorpay.Order;
 import com.razorpay.RazorpayClient;
@@ -14,7 +15,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class RazorpayService {
@@ -45,7 +48,17 @@ public class RazorpayService {
             return ResponseEntity.status(HttpStatus.OK).body(order.toString());
         } catch (RazorpayException | MongoException e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getCause());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    public Object updateOrder(UpdateOrder updateOrder) {
+        try {
+            mongoService.updateEntry("orders", updateOrder);
+            return ResponseEntity.status(HttpStatus.OK).body("UPDATED");
+        } catch (MongoException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 
@@ -59,7 +72,18 @@ public class RazorpayService {
             return ResponseEntity.status(HttpStatus.OK).body(orderIds);
         } catch (RazorpayException e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getCause());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    public Object getOrderAmountDue(String orderId) {
+        try {
+            Map<String, Object> orderMap = new HashMap<>();
+            Integer amountDue = razorpayClient.Orders.fetch(orderId).get("amount_due");
+            orderMap.put("amountDue", amountDue);
+            return ResponseEntity.status(HttpStatus.OK).body(orderMap);
+        } catch (RazorpayException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cannot Find Order Id: " + e.getMessage());
         }
     }
 
