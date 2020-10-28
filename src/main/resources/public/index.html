@@ -11,8 +11,12 @@
                 xmlHttp.send( null );
                 return xmlHttp.responseText;
             }
-            var orderIdList = httpGetData();
-            document.write(orderIdList);
+            var orders = httpGetData();
+            var ordersIdList = orders.substring(1,orders.length-1).split(",");
+            for(i=0;i<ordersIdList.length;i++) {
+                ordersIdList[i] = ordersIdList[i].substring(1,ordersIdList[i].length-1);
+                document.write("<a href='/test'>" + ordersIdList[i] + "</a><br />");
+            }
         </script>
     </body>
 </html>
